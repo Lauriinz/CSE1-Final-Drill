@@ -6,6 +6,7 @@ import datetime
 import json
 from flask_bcrypt import Bcrypt 
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -82,6 +83,25 @@ def register():
     save_users(users)
 
     return jsonify({"message": "Registered successfully"}), 201
+
+def token_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        token = request.headers.get("Authorization")
+
+        if not token:
+            return jsonify({"error": "Missing token"}), 401
+
+        try:
+            decoded_token = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+            request.username = decoded_token["username"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Expired Token"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token"}), 401
+
+        return f(*args, **kwargs)
+    return wrapper
 
 # Routes
 @app.route('/')
