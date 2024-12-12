@@ -187,6 +187,7 @@ def update_person(person_id):
         return jsonify({"error": str(e)}), 400
 
 @app.route('/persons/<int:person_id>', methods=['DELETE'])
+@role_required(["admin"])
 def delete_person(person_id):
     conn = mysql.connection
     cursor = conn.cursor()
@@ -257,6 +258,7 @@ def update_club(club_id):
         return jsonify({"error": str(e)}), 400
 
 @app.route('/clubs/<int:club_id>', methods=['DELETE'])
+@role_required(["admin"])
 def delete_club(club_id):
     conn = mysql.connection
     cursor = conn.cursor()
@@ -329,6 +331,7 @@ def update_clubmember(member_id):
         return jsonify({"error": str(e)}), 400
 
 @app.route('/clubmembers/<int:member_id>', methods=['DELETE'])
+@role_required(["admin"])
 def delete_clubmember(member_id):
     conn = mysql.connection
     cursor = conn.cursor()
@@ -400,6 +403,7 @@ def update_facility(facility_id):
         return jsonify({"error": str(e)}), 400
 
 @app.route('/facilities/<int:facility_id>', methods=['DELETE'])
+@role_required(["admin"])
 def delete_facility(facility_id):
     conn = mysql.connection
     cursor = conn.cursor()
