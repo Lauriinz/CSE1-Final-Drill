@@ -122,6 +122,7 @@ def home():
 
 # Person Endpoints
 @app.route('/persons', methods=['GET'])
+@token_required
 def get_persons():
     conn = mysql.connection
     cursor = conn.cursor()
@@ -272,6 +273,7 @@ def delete_club(club_id):
 
 #CLUB MEMBER ENDPOINTS
 @app.route('/clubmembers', methods=['GET'])
+@role_required(["admin"])
 def get_clubmembers():
     conn = mysql.connection
     cursor = conn.cursor()
